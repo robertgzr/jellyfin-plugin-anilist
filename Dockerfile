@@ -20,4 +20,5 @@ RUN --mount=target=.,rw \
     dotnet publish --nologo --configuration Release --output /out --force
 
 FROM scratch AS final
-COPY --from=release /out/Jellyfin.Plugin.* /
+COPY --from=release /out/Jellyfin.Plugin* /
+COPY --from=release /out/AnitomySharp* /

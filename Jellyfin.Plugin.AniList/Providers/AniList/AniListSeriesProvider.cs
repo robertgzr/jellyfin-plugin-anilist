@@ -14,6 +14,9 @@ using MediaBrowser.Model.Providers;
 using MediaBrowser.Model.Serialization;
 using Microsoft.Extensions.Logging;
 
+using System.Linq;
+using AnitomySharp;
+
 //API v2
 namespace Jellyfin.Plugin.AniList.Providers.AniList
 {
@@ -44,8 +47,9 @@ namespace Jellyfin.Plugin.AniList.Providers.AniList
             }
             else
             {
-                _log.LogInformation("Start AniList... Searching({Name})", info.Name);
-                MediaSearchResult msr = await _aniListApi.Search_GetSeries(info.Name, cancellationToken);
+                var e = AnitomySharp.AnitomySharp.Parse(info.Name).Where(x => x.Category.Equals(Element.ElementCategory.ElementAnimeTitle)).First();
+                _log.LogInformation("Start AniList... Searching({Name})", e.Value);
+                MediaSearchResult msr = await _aniListApi.Search_GetSeries(e.Value, cancellationToken);
                 if (msr != null)
                 {
                     media = await _aniListApi.GetAnime(msr.id.ToString());
